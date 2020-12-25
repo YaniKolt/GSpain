@@ -52,8 +52,8 @@ void TBeFun::GetBounds(double* lower, double *upper)
   if (mIsInitialized)
     for (int i = 0; i < mDimension; i++)
     {
-      lower[i] = -3; //-1.8;
-      upper[i] = 2; //2.2;
+      lower[i] = -0.5; //-1.8;
+      upper[i] = 1; //2.2;
     }
 }
 
@@ -100,9 +100,16 @@ int TBeFun::GetNumberOfCriterions() const
 double TBeFun::CalculateFunctionals(const double* x, int fNumber)
 {
   double sum = 0.;
-  for (int j = 0; j < mDimension; j++)
-    //sum += x[j] * x[j] - 10. * cos(2.0 * M_PI * x[j]) + 10.0;
-    sum += x[j] * x[j];
+  //for (int j = 0; j < mDimension; j++)
+  //  //sum += x[j] * x[j] - 10. * cos(2.0 * M_PI * x[j]) + 10.0;
+  //  sum += x[j];
+  for (int j = 0; j < mDimension; j++) {
+    if (j == 0) {
+      sum += x[j] * x[j];
+    }
+    else
+      sum -= x[j];
+  }
   return sum;
 }
 

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+  <function_number>4</function_number>
+  <function_class>1</function_class>
+  <dimension>1</dimension>
+  <global_dist>0.9</global_dist>
+  <global_radius>0.2</global_radius>
+  <num_minima>10</num_minima>
+</config>
+

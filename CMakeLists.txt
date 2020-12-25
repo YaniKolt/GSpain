@@ -1,6 +1,7 @@
-cmake_minimum_required(VERSION 2.8) #Проверка версии CMake.
+cmake_minimum_required(VERSION 3.1) #Проверка версии CMake.
 
 set(PROJECT_NAME 000_Lebedev_AllLab) #Создаем обычную локальную переменную с именем проекта
+set(CMAKE_CXX_STANDARD 11)
 project(${PROJECT_NAME}) # Название проекта
 
 set(PROBLEM_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/_bin CACHE STRING "Output directory")
@@ -9,6 +10,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROBLEM_OUTPUT_DIRECTORY})
 
 set(GlobalSearch GlobalSearch) #Переменная с именем библиотеки
 set(pugixml pugixml) #Переменная с именем библиотеки
+set(src src)
+option(USE_MPI "Set OFF to disable MPI" ON)
 
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Configs" FORCE) #Создается переменная CMAKE_CONFIGURATION_TYPES со значением "Debug;Release" и меткой/разделом Configs, переменная сохраниется в специальном файле доступном из всех файлов,
 if(NOT CMAKE_BUILD_TYPE) # проверка имеющихся у компилятора вариантов сборки
@@ -16,14 +19,24 @@ if(NOT CMAKE_BUILD_TYPE) # проверка имеющихся у компилятора вариантов сборки
 endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/pugixml)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/SRC/)
 
-add_subdirectory(pugixml)
-add_subdirectory(GlobalSearch)
-add_subdirectory(Rastrigin2)
-add_subdirectory(GKLS)
-add_subdirectory(StronginC3)
-add_subdirectory(Grishagin)
-add_subdirectory(BeautifulFunction)
+if(WIN32)
+    option(gtest_force_shared_crt "" TRUE)
+endif(WIN32)
+
+#include( "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Configure.cmake" )
+
+############################### GTest ###############################
+#add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/gtest")
+#include_directories("${CMAKE_SOURCE_DIR}/3rdparty/gtest/googletest/include")
+#if( WIN32 )
+ #   include_directories("${CMAKE_SOURCE_DIR}/3rdparty/gtest-mpi/win")
+#else( WIN32 )
+    #include_directories("${CMAKE_SOURCE_DIR}/3rdparty/gtest-mpi/linux")
+#endif( WIN32 )
+
+################################ MPI ################################
 
 option(USE_MPI OFF)
 if( USE_MPI )
@@ -35,6 +48,20 @@ if( USE_MPI )
     endif( MPI_FOUND )
 endif( USE_MPI )
 
+add_subdirectory(pugixml)
+add_subdirectory(src)
+add_subdirectory(GlobalSearch)
+add_subdirectory(BeautifulFunction)
+add_subdirectory(Rastrigin2)
+add_subdirectory(GKLS)
+add_subdirectory(Grishagin)
+add_subdirectory(StronginC3)
+
+
+#target_link_libraries(src ${EXAMIN_MPFR_LIB} ${EXAMIN_MPIR_LIB} ${DISLIN_LIB})
+
+
+#-----------------------------------------------------------------------------------
 #file(GLOB hdrs "*.h*") #Добавляем в переменную hdrs все файлы с расширением .h
 #file(GLOB srcs "*.cpp") #Добавляем в переменную srcs все файлы с расширением .cpp
 
